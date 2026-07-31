@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Log — A Closed-Loop Smart Farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F1ECDC;
+    --paper-deep: #E6DFC8;
+    --ink: #22301E;
+    --ink-soft: #4B5A45;
+    --soil: #6B4226;
+    --moss: #4B6B3A;
+    --amber: #C97C2E;
+    --slate: #46626B;
+    --rule: rgba(34,48,30,0.16);
+    --card: #FBF8EF;
+    --radius: 3px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(34,48,30,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  h1,h2,h3{
+    font-family:'Newsreader', serif;
+    font-weight:500;
+    color:var(--ink);
+    margin:0;
+  }
+
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  a{color:var(--soil);}
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--paper);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner{
+    max-width:1080px;
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:24px;
+  }
+  .brand{
+    font-family:'Newsreader', serif;
+    font-size:1.15rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .brand span{color:var(--moss);}
+  .nav-links{
+    display:flex;
+    gap:26px;
+    list-style:none;
+    margin:0; padding:0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .nav-links a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+    padding-bottom:3px;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .nav-links a:hover{color:var(--soil); border-color:var(--soil);}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    padding:76px 0 56px;
+    border-bottom:1px solid var(--rule);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--moss);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--moss);
+    box-shadow:0 0 0 3px rgba(75,107,58,0.18);
+  }
+  .hero h1{
+    font-size:clamp(2.3rem, 5vw, 3.4rem);
+    line-height:1.05;
+    max-width:16ch;
+  }
+  .hero p.lede{
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:56ch;
+    margin-top:20px;
+  }
+  .hero-meta{
+    display:flex;
+    gap:38px;
+    margin-top:40px;
+    flex-wrap:wrap;
+  }
+  .hero-meta .stat{
+    border-left:2px solid var(--amber);
+    padding-left:12px;
+  }
+  .hero-meta .stat b{
+    display:block;
+    font-family:'Newsreader', serif;
+    font-size:1.5rem;
+    line-height:1;
+  }
+  .hero-meta .stat span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- SECTION SCAFFOLDING ---------- */
+  section{padding:64px 0;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:34px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{font-size:1.7rem;}
+  .section-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--soil);
+    background:rgba(107,66,38,0.09);
+    padding:5px 10px;
+    border-radius:2px;
+  }
+  .lede-small{color:var(--ink-soft); max-width:62ch; margin-top:6px;}
+
+  /* ---------- DASHBOARD ---------- */
+  .dash-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+  }
+  .dash-card{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .dash-card .label{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    border-bottom:1px solid var(--rule);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .dash-card iframe{
+    width:100%;
+    height:230px;
+    border:none;
+    display:block;
+  }
+  .dash-note{
+    margin-top:18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- PROCEDURE ---------- */
+  .timeline{
+    position:relative;
+    padding-left:38px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:9px; top:6px; bottom:6px;
+    width:1px;
+    background:var(--rule);
+  }
+  .tl-item{
+    position:relative;
+    padding-bottom:34px;
+  }
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:attr(data-week);
+    position:absolute;
+    left:-38px;
+    top:0;
+    width:20px; height:20px;
+    background:var(--paper);
+    border:1px solid var(--moss);
+    color:var(--moss);
+    border-radius:50%;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.65rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .tl-item h3{font-size:1.1rem; margin-bottom:6px;}
+  .tl-item p{color:var(--ink-soft); margin:0; max-width:64ch;}
+
+  /* ---------- MODELS ---------- */
+  .model-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+  }
+  .model-card{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    padding:24px;
+  }
+  .model-card h3{font-size:1.15rem;}
+  .model-card .order-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--slate);
+    display:block;
+    margin-bottom:8px;
+  }
+  .eq{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--paper-deep);
+    padding:14px 16px;
+    border-radius:2px;
+    margin:14px 0;
+    font-size:0.86rem;
+    overflow-x:auto;
+  }
+  .model-card p{color:var(--ink-soft); font-size:0.94rem;}
+  .fit-stat{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    background:rgba(75,107,58,0.12);
+    color:var(--moss);
+    padding:3px 8px;
+    border-radius:2px;
+    margin-top:8px;
+  }
+  .img-slot{
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper-deep);
+    border-radius:2px;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    text-align:center;
+    padding:10px;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+  }
+  .gallery figure{
+    margin:0;
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .gallery .img-slot{
+    aspect-ratio:4/3;
+    background:
+      linear-gradient(135deg, var(--paper-deep) 25%, transparent 25%) -6px 0/12px 12px,
+      linear-gradient(225deg, var(--paper-deep) 25%, transparent 25%) -6px 0/12px 12px,
+      linear-gradient(315deg, var(--paper-deep) 25%, transparent 25%) 0px 0/12px 12px,
+      linear-gradient(45deg, var(--paper-deep) 25%, var(--card) 25%) 0px 0/12px 12px;
+  }
+  .gallery figcaption{
+    padding:9px 12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:var(--ink-soft);
+    border-top:1px solid var(--rule);
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq-item{
+    border-bottom:1px solid var(--rule);
+  }
+  .faq-item:first-child{border-top:1px solid var(--rule);}
+  .faq-q{
+    width:100%;
+    background:none;
+    border:none;
+    text-align:left;
+    padding:18px 4px;
+    font-family:'Newsreader', serif;
+    font-size:1.05rem;
+    color:var(--ink);
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+  }
+  .faq-q .mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1.1rem;
+    color:var(--amber);
+    flex-shrink:0;
+    transition:transform .2s ease;
+  }
+  .faq-item.open .faq-q .mark{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .faq-a-inner{
+    padding:0 4px 20px;
+    color:var(--ink-soft);
+    max-width:70ch;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:40px 0 60px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--ink-soft);
+  }
+  footer .wrap{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+
+  @media (max-width: 780px){
+    .dash-grid{grid-template-columns:1fr 1fr;}
+    .model-grid{grid-template-columns:1fr;}
+    .gallery{grid-template-columns:1fr 1fr;}
+    .nav-links{display:none;}
+  }
+  @media (max-width: 480px){
+    .dash-grid{grid-template-columns:1fr;}
+    .gallery{grid-template-columns:1fr 1fr;}
+    .hero-meta{gap:24px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+
+  a.skip-link{
+    position:absolute;left:-999px;top:0;
+    background:var(--ink); color:var(--paper);
+    padding:10px 16px; z-index:100;
+  }
+  a.skip-link:focus{left:12px; top:12px;}
+
+  :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">Field Log <span>— Closed-Loop Farm</span></div>
+    <ul class="nav-links">
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#procedure">Procedure</a></li>
+      <li><a href="#models">Models</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow"><span class="dot"></span> Live system, radish + lettuce bed</div>
+      <h1>A planter-scale digital twin that waters, lights, and watches itself.</h1>
+      <p class="lede">Adapted from AgriLoRa's field-scale sensing architecture down to a single bed: an ESP32 reads soil, light, and air conditions, drives two closed-loop controllers, and screens for disease, all logged live below.</p>
+      <div class="hero-meta">
+        <div class="stat"><b>2</b><span>Closed-loop controllers</span></div>
+        <div class="stat"><b>6</b><span>Live sensor channels</span></div>
+        <div class="stat"><b>R²&nbsp;0.97</b><span>Soil decay model fit</span></div>
+        <div class="stat"><b>4 wk</b><span>Build timeline</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="dashboard">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Live from the bed</h2>
+          <p class="lede-small">Pulled directly from our ThingSpeak channel. Irrigation and light run their own predictive logic on the ESP32; everything below is a live readout, not a simulation.</p>
+        </div>
+        <span class="section-tag">Channel 3434570</span>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card">
+          <div class="label"><span>Soil Moisture</span><span class="mono">Field 1</span></div>
+          <iframe src="https://thingspeak.com/channels/3434570/charts/1?bgcolor=%23FBF8EF&color=%236B4226&dynamic=true&results=60&type=line"></iframe>
+        </div>
+        <div class="dash-card">
+          <div class="label"><span>Air Humidity</span><span class="mono">Field 2</span></div>
+          <iframe src="https://thingspeak.com/channels/3434570/charts/2?bgcolor=%23FBF8EF&color=%2346626B&dynamic=true&results=60&type=line"></iframe>
+        </div>
+        <div class="dash-card">
+          <div class="label"><span>Light Intensity</span><span class="mono">Field 3</span></div>
+          <iframe src="https://thingspeak.com/channels/3434570/charts/3?bgcolor=%23FBF8EF&color=%23C97C2E&dynamic=true&results=60&type=line"></iframe>
+        </div>
+        <div class="dash-card">
+          <div class="label"><span>Disease Detector</span><span class="mono">Field 4</span></div>
+          <iframe src="https://thingspeak.com/channels/3434570/charts/4?bgcolor=%23FBF8EF&color=%234B6B3A&dynamic=true&results=60&type=line"></iframe>
+        </div>
+        <div class="dash-card">
+          <div class="label"><span>Soil Temperature</span><span class="mono">Field 5</span></div>
+          <iframe src="https://thingspeak.com/channels/3434570/charts/5?bgcolor=%23FBF8EF&color=%236B4226&dynamic=true&results=60&type=line"></iframe>
+        </div>
+        <div class="dash-card">
+          <div class="label"><span>Air Temperature</span><span class="mono">Field 6</span></div>
+          <iframe src="https://thingspeak.com/channels/3434570/charts/6?bgcolor=%23FBF8EF&color=%2346626B&dynamic=true&results=60&type=line"></iframe>
+        </div>
+      </div>
+      <p class="dash-note">// Disease Detector reads 0 = healthy, 1 = disease flagged, 2 = uncertain. An email alert fires automatically on a "1" via ThingSpeak React.</p>
+    </div>
+  </section>
+
+  <section id="procedure">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>How it got built</h2>
+          <p class="lede-small">A real build order, week by week, not a cleaned-up version of it.</p>
+        </div>
+        <span class="section-tag">4-week timeline</span>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item" data-week="1">
+          <h3>Week 1 — Sensors talk to the board</h3>
+          <p>Soil moisture, DHT22, and the VEML7700 lux sensor wired and calibrated on the ESP32. Confirmed dry/wet reference readings by hand before trusting any percentage math.</p>
+        </div>
+        <div class="tl-item" data-week="2">
+          <h3>Week 2 — The first closed loop</h3>
+          <p>Threshold-based irrigation and a first-order LED controller, both reacting to live readings. This became the fallback layer everything predictive is built on top of.</p>
+        </div>
+        <div class="tl-item" data-week="3">
+          <h3>Week 3 — Prediction, not just reaction</h3>
+          <p>Logged a full soil drying curve, fit a second-order decay model in MATLAB (R² = 0.97), and moved irrigation from "water when dry" to "water before it gets there." Added a divergence check that falls back to the live sensor whenever the model and reality disagree by more than 15%.</p>
+        </div>
+        <div class="tl-item" data-week="4">
+          <h3>Week 4 — Camera, ML, and the dashboard</h3>
+          <p>ESP32-CAM feeding a pretrained leaf classifier, ThingSpeak wired up for all six channels, and an automated email alert on a positive disease flag. Everything above is what's actually running right now.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="models">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>The two models doing the thinking</h2>
+          <p class="lede-small">One predicts ahead of a sensor reading. The other reacts smoothly to one. Neither pretends to be the other.</p>
+        </div>
+      </div>
+
+      <div class="model-grid">
+        <div class="model-card">
+          <span class="order-tag">Irrigation — second order, predictive</span>
+          <h3>Soil moisture decay</h3>
+          <div class="eq">M(t) = M<sub>∞</sub> + C₁e<sup>-t/τ₁</sup> + C₂e<sup>-t/τ₂</sup></div>
+          <p>Fit against a logged drying curve rather than assumed. The controller forecasts moisture five minutes out and waters ahead of the threshold, falling back to the live sensor whenever its own forecast drifts more than 15 points from reality.</p>
+          <span class="fit-stat">R² = 0.9709</span>
+          <div class="img-slot" style="aspect-ratio:16/9; margin-top:12px;">
+            [ place moisture_decay_fit.png here ]
+          </div>
+        </div>
+
+        <div class="model-card">
+          <span class="order-tag">Grow light — first order, reactive</span>
+          <h3>LED brightness response</h3>
+          <div class="eq">B(t) = B<sub>t</sub> − (B<sub>t</sub> − B₀)e<sup>-t/τ</sup></div>
+          <p>No overshoot by design: brightness eases toward whatever the ambient sensor calls for. A lightweight self-check compares the closed-form prediction against actual output and only steps in with simple proportional correction when the two disagree.</p>
+          <span class="fit-stat">τ chosen ≥ 10× sensor response time</span>
+          <div class="img-slot" style="aspect-ratio:16/9; margin-top:12px;">
+            [ place led_first_order_plot.png here ]
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>From the bench</h2>
+          <p class="lede-small">Swap these slots for your real build photos, wiring shots work best.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure><div class="img-slot">breadboard.jpg</div><figcaption>Sensor + relay layout</figcaption></figure>
+        <figure><div class="img-slot">esp32-cam.jpg</div><figcaption>ESP32-CAM mount</figcaption></figure>
+        <figure><div class="img-slot">seedlings.jpg</div><figcaption>Radish + lettuce, day 2</figcaption></figure>
+        <figure><div class="img-slot">dashboard.jpg</div><figcaption>ThingSpeak, live</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Questions worth asking</h2>
+          <p class="lede-small">Including the ones that make the project look less finished, on purpose.</p>
+        </div>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q"><span>Why predict irrigation at all, if a sensor already tells you it's dry?</span><span class="mark">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">At planter scale, honestly, reactive control would likely work almost as well, water delivery here is near-instant. The predictive layer matters more at commercial scale, where pipe networks and shared reservoirs introduce real delay between decision and delivery. We built it here to demonstrate the architecture, not because this bed strictly needed it.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span>Does the disease detector actually work on radish and lettuce?</span><span class="mark">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">The classifier is trained on PlantVillage, 14 crop species, and neither of ours is on that list. It will still return a confident-sounding label on our photos, that label isn't reliable. We kept it in to demonstrate the full capture, classify, alert pipeline, and flag this gap plainly rather than overstate accuracy we don't have.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span>What happens if the model's prediction is just wrong?</span><span class="mark">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Both controllers check their own predictions against the live sensor every cycle. If the two disagree past a set tolerance, the system stops trusting the forecast and falls back to simple reactive control until they realign. It's a small thing, but it's the difference between a model that can be wrong safely and one that can't.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span>Why not automate fertilizer or treatment dosing too?</span><span class="mark">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Wrong dosing carries real, sometimes irreversible risk to the plant, and our disease model wasn't trained on our actual crops. Both loops here water and light because getting those wrong is low-stakes; treatment decisions stay with a person on purpose.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q"><span>Is any of this actually autonomous, or does it need a laptop running?</span><span class="mark">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Irrigation and lighting run entirely on the ESP32, no computer required once it's powered and connected. The ML disease step is the exception: a Vision Transformer model is too heavy to run on the ESP32 itself, so a laptop handles inference and the ESP32 handles the rest.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Field Log — built on ESP32, logged to ThingSpeak</span>
+    <span>Adapted from AgriLoRa (Angin et al.), field scale to planter scale</span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    const answer = item.querySelector('.faq-a');
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(open => {
+        if (open !== item) {
+          open.classList.remove('open');
+          open.querySelector('.faq-a').style.maxHeight = null;
+        }
+      });
+      if (isOpen) {
+        item.classList.remove('open');
+        answer.style.maxHeight = null;
+      } else {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
