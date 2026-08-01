@@ -152,6 +152,30 @@
     text-transform:uppercase;
     color:var(--ink-soft);
   }
+.hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  .hero-image{
+    width:100%;
+    aspect-ratio:4/5;
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .hero-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  @media (max-width: 820px){
+    .hero-grid{grid-template-columns:1fr; gap:32px;}
+    .hero-image{aspect-ratio:16/10; order:-1;}
+  }
+  
 
   /* ---------- SECTION SCAFFOLDING ---------- */
   section{padding:64px 0;border-bottom:1px solid var(--rule);}
@@ -433,26 +457,26 @@
 <main id="main">
 
 
-  <header class="hero">
+<header class="hero">
     <div class="wrap">
-      <div class="eyebrow"><span class="dot"></span> Live system, radish + lettuce bed</div>
-      <h1>AutoGrow: Optimizing A Farm Through Digital Twins</h1>
-      <p class="lede">To grow 4 crop species (romaine lettuce, looseleaf lettuce, cherry belle radishes, and yellow wood sorrel), we use digital twins to optimize the autonomous irrigation, lighting, and disease detection system. We also use cloud dashboards to monitor the IoT sensor networks. </p>
-      <div class="hero-meta">
-        <div class="stat"><b>2</b><span>Closed-loop controllers</span></div>
-        <div class="stat"><b>6</b><span>Live sensor channels</span></div>
-        <div class="stat"><b>R²=&nbsp;0.97</b><span>Soil decay model fit</span></div>
-        <div class="stat"><b>4 wk</b><span>Build timeline</span></div>
-      </div>
-    </div>
-    <div class="hero-image">
-           <img src="plant-farm.jpeg" alt="LoopFarm planter setup with sensors, LED grow light, and irrigation system">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Live system, radish + lettuce bed</div>
+          <h1>AutoGrow: Optimizing A Farm Through Digital Twins</h1>
+          <p class="lede">To grow 4 crop species (romaine lettuce, looseleaf lettuce, cherry belle radishes, and yellow wood sorrel), we use digital twins to optimize the autonomous irrigation, lighting, and disease detection system. We also use cloud dashboards to monitor the IoT sensor networks.</p>
+          <div class="hero-meta">
+            <div class="stat"><b>2</b><span>Closed-loop controllers</span></div>
+            <div class="stat"><b>6</b><span>Live sensor channels</span></div>
+            <div class="stat"><b>R²&nbsp;0.97</b><span>Soil decay model fit</span></div>
+            <div class="stat"><b>4 wk</b><span>Build timeline</span></div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="plant-farm.jpeg" alt="LoopFarm planter setup with sensors, LED grow light, and irrigation system">
         </div>
       </div>
     </div>
-    
   </header>
-
   <section id="dashboard">
     <div class="wrap">
       <div class="section-head">
@@ -463,26 +487,53 @@
         <span class="section-tag">ThingSpeak Channel: 3434570</span>
       </div>
 
-      <div class="dash-grid">
-        <div class="dash-card">
-          <div class="label"><span>Soil Moisture</span><span class="mono">Field 1</span></div>
-          <iframe src="https://thingspeak.com/channels/3434570/charts/1?bgcolor=%23FBF8EF&color=%236B4226&dynamic=true&results=60&type=line"></iframe>
-        </div>
-        <div class="dash-card">
-          <div class="label"><span>Air Humidity</span><span class="mono">Field 2</span></div>
-          <iframe src="https://thingspeak.com/channels/3434570/charts/2?bgcolor=%23FBF8EF&color=%2346626B&dynamic=true&results=60&type=line"></iframe>
-        </div>
-        <div class="dash-card">
-          <div class="label"><span>Light Intensity</span><span class="mono">Field 3</span></div>
-          <iframe src="https://thingspeak.com/channels/3434570/charts/3?bgcolor=%23FBF8EF&color=%23C97C2E&dynamic=true&results=60&type=line"></iframe>
-        </div>
-        <div class="dash-card">
-          <div class="label"><span>Disease Detector</span><span class="mono">Field 4</span></div>
-          <iframe src="https://thingspeak.com/channels/3434570/charts/4?bgcolor=%23FBF8EF&color=%234B6B3A&dynamic=true&results=60&type=line"></iframe>
+<section id="dashboard">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Live From the Farm</h2>
+        <p class="lede-small">Below are our dashboard readings from our ThingSpeak channel, for field measurements on sensors. This is in accompaniment with our predictive digital twins (irrigation, light, and camera systems). Since this project uses digital twins, everything below is a live readout, not a simulation.</p>
       </div>
-      <p class="dash-note"> Disease Detector reads 0 = healthy, 1 = disease flagged, 2 = uncertain. </p>
+      <span class="section-tag">ThingSpeak Channel: 3434570</span>
     </div>
-  </section>
+    
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="label">
+          <span>Soil Moisture</span>
+          <span class="mono">Field 1</span>
+        </div>
+        <iframe src="https://thingspeak.com/channels/3434570/charts/1?bgcolor=%23FBF8EF&color=%236B4226&dynamic=true&results=60&type=line"></iframe>
+      </div>
+      
+      <div class="dash-card">
+        <div class="label">
+          <span>Air Humidity</span>
+          <span class="mono">Field 2</span>
+        </div>
+        <iframe src="https://thingspeak.com/channels/3434570/charts/2?bgcolor=%23FBF8EF&color=%2346626B&dynamic=true&results=60&type=line"></iframe>
+      </div>
+      
+      <div class="dash-card">
+        <div class="label">
+          <span>Light Intensity</span>
+          <span class="mono">Field 3</span>
+        </div>
+        <iframe src="https://thingspeak.com/channels/3434570/charts/3?bgcolor=%23FBF8EF&color=%23C97C2E&dynamic=true&results=60&type=line"></iframe>
+      </div>
+      
+      <div class="dash-card">
+        <div class="label">
+          <span>Disease Detector</span>
+          <span class="mono">Field 4</span>
+        </div>
+        <iframe src="https://thingspeak.com/channels/3434570/charts/4?bgcolor=%23FBF8EF&color=%234B6B3A&dynamic=true&results=60&type=line"></iframe>
+      </div>
+      
+      <p class="dash-note">Disease Detector reads 0 = healthy, 1 = disease flagged, 2 = uncertain.</p>
+    </div>
+  </div>
+</section>
 
   <section id="procedure">
     <div class="wrap">
