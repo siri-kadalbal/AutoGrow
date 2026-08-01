@@ -542,27 +542,27 @@
       <div class="section-head">
         <div>
           <h2>How it got built</h2>
-          <p class="lede-small">A real build order, week by week, not a cleaned-up version of it.</p>
+          <p class="lede-small">Here's how the project was built over 4 weeks</p>
         </div>
         <span class="section-tag">4-week timeline</span>
       </div>
 
       <div class="timeline">
         <div class="tl-item" data-week="1">
-          <h3>Week 1 — Sensors talk to the board</h3>
-          <p>Soil moisture, DHT22, and the VEML7700 lux sensor wired and calibrated on the ESP32. Confirmed dry/wet reference readings by hand before trusting any percentage math.</p>
+          <h3>Week 1 </h3>
+          <p>Soil moisture, DHT22, and the VEML7700 lux sensor wired and calibrated on the ESP32. Building sensor network.</p>
         </div>
         <div class="tl-item" data-week="2">
-          <h3>Week 2 — The first closed loop</h3>
-          <p>Threshold-based irrigation and a first-order LED controller, both reacting to live readings. This became the fallback layer everything predictive is built on top of.</p>
+          <h3>Week 2</h3>
+          <p>Threshold-based irrigation and a first-order LED controller, both reacting to live readings. </p>
         </div>
         <div class="tl-item" data-week="3">
-          <h3>Week 3 — Prediction, not just reaction</h3>
-          <p>Logged a full soil drying curve, fit a second-order decay model in MATLAB (R² = 0.97), and moved irrigation from "water when dry" to "water before it gets there." Added a divergence check that falls back to the live sensor whenever the model and reality disagree by more than 15%.</p>
+          <h3>Week 3</h3>
+          <p>Moved from reaction to prediction.Logged a full soil drying curve, fit a second-order decay model in MATLAB for both light and moisture curves. Added a divergence check that falls back to the live sensor whenever the model and reality disagree by more than 15%.</p>
         </div>
         <div class="tl-item" data-week="4">
           <h3>Week 4 — Camera, ML, and the dashboard</h3>
-          <p>ESP32-CAM feeding a pretrained leaf classifier, ThingSpeak wired up for all six channels, and an automated email alert on a positive disease flag. Everything above is what's actually running right now.</p>
+          <p>ESP32-CAM feeding a pretrained leaf classifier, ThingSpeak wired up for all six channels, and an automated email alert on a positive disease flag. </p>
         </div>
       </div>
     </div>
