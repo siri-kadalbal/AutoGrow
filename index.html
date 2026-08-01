@@ -605,8 +605,8 @@
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2>From the bench</h2>
-          <p class="lede-small">Swap these slots for your real build photos, wiring shots work best.</p>
+          <h2>Gallery</h2>
+          <p class="lede-small">View some images and video clips of our project!</p>
         </div>
       </div>
       <div class="gallery">
@@ -650,31 +650,27 @@
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2>Questions worth asking</h2>
-          <p class="lede-small">Including the ones that make the project look less finished, on purpose.</p>
+          <h2>FAQ</h2>
+          <p class="lede-small"></p>
         </div>
       </div>
 
       <div class="faq-list">
         <div class="faq-item">
           <button class="faq-q"><span>Why predict irrigation at all, if a sensor already tells you it's dry?</span><span class="mark">+</span></button>
-          <div class="faq-a"><div class="faq-a-inner">At planter scale, honestly, reactive control would likely work almost as well, water delivery here is near-instant. The predictive layer matters more at commercial scale, where pipe networks and shared reservoirs introduce real delay between decision and delivery. We built it here to demonstrate the architecture, not because this bed strictly needed it.</div></div>
+          <div class="faq-a"><div class="faq-a-inner">At planter scale, reactive control would likely work almost as well, water delivery here is near-instant. The predictive layer matters more at commercial scale, where pipe networks and shared reservoirs introduce real delay between decision and delivery. We built it here to demonstrate the architecture.</div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q"><span>Does the disease detector actually work on radish and lettuce?</span><span class="mark">+</span></button>
-          <div class="faq-a"><div class="faq-a-inner">The classifier is trained on PlantVillage, 14 crop species, and neither of ours is on that list. It will still return a confident-sounding label on our photos, that label isn't reliable. We kept it in to demonstrate the full capture, classify, alert pipeline, and flag this gap plainly rather than overstate accuracy we don't have.</div></div>
+          <button class="faq-q"><span>Why does one of the graphs have data that it is fitted to, but not the other one?</span><span class="mark">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">The irrigation second order model represents the sensor response curve (soil moisture readings vs. time), while the LED first order model represents the actuator response curve (how long it takes our LEDs to light up based on our own defined first model curve). </div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q"><span>What happens if the model's prediction is just wrong?</span><span class="mark">+</span></button>
           <div class="faq-a"><div class="faq-a-inner">Both controllers check their own predictions against the live sensor every cycle. If the two disagree past a set tolerance, the system stops trusting the forecast and falls back to simple reactive control until they realign. It's a small thing, but it's the difference between a model that can be wrong safely and one that can't.</div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-q"><span>Why not automate fertilizer or treatment dosing too?</span><span class="mark">+</span></button>
-          <div class="faq-a"><div class="faq-a-inner">Wrong dosing carries real, sometimes irreversible risk to the plant, and our disease model wasn't trained on our actual crops. Both loops here water and light because getting those wrong is low-stakes; treatment decisions stay with a person on purpose.</div></div>
-        </div>
-        <div class="faq-item">
           <button class="faq-q"><span>Is any of this actually autonomous, or does it need a laptop running?</span><span class="mark">+</span></button>
-          <div class="faq-a"><div class="faq-a-inner">Irrigation and lighting run entirely on the ESP32, no computer required once it's powered and connected. The ML disease step is the exception: a Vision Transformer model is too heavy to run on the ESP32 itself, so a laptop handles inference and the ESP32 handles the rest.</div></div>
+          <div class="faq-a"><div class="faq-a-inner">Irrigation and lighting run entirely on the ESP32. The ML disease step is too heavy to run on the ESP32 itself, so a laptop handles inference and the ESP32 handles the rest.</div></div>
         </div>
       </div>
     </div>
