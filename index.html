@@ -447,8 +447,10 @@
     <ul class="nav-links">
       <li><a href="#dashboard">Dashboard</a></li>
       <li><a href="#procedure">Procedure</a></li>
-      <li><a href="#models">Models</a></li>
+      <li><a href="#models">ODE Models</a></li>
+      <li><a href="#ml-model">ML Model</a></li>
       <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#ml-model">Team</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
   </div>
@@ -600,7 +602,24 @@
       </div>
     </div>
   </section>
+  <section id="ml-model">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Disease Detection Model</h2>
+          <p class="lede-small">A pretrained Vision Transformer, used to demonstrate the full capture-to-alert pipeline.</p>
+        </div>
+        <span class="section-tag">Hugging Face · ViT</span>
+      </div>
 
+      <div class="model-card">
+        <span class="order-tag">kimcomehome/plantvillage-vit-leaf-disease</span>
+        <h3>Pretrained Vision Transformer, fine-tuned on PlantVillage</h3>
+        <p>We did not train this model ourselves. It's a Vision Transformer (fine-tuned from google/vit-base-patch16-224-in21k) trained on the public PlantVillage dataset, 14 crop species, 38 healthy/disease classes, the same transfer-learning approach used in the AgriLoRa paper our project is adapted from.</p>
+        <p><b>Pipeline:</b> ESP32-CAM captures a photo → a local Python script fetches it over the ESP32's own network → the cached model classifies it locally, no internet required after the first download → the result is simplified to healthy / sick / uncertain → the ESP32 switches to a network with real internet access and logs the result to ThingSpeak, which can trigger an automated email alert.</p>
+      </div>
+    </div>
+  </section>
   <section id="gallery">
     <div class="wrap">
       <div class="section-head">
@@ -645,7 +664,33 @@
 </figure>
     </div>
   </section>
-
+<section id="team">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Team</h2>
+          <p class="lede-small">This project was completed as a part of UCM COSMOS Cluster 6: Digital Twins: Making Things Smarter by us.</p>
+        </div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-photo">
+            <img src="teammate-1.jpg" alt="Photo of teammate one">
+          </div>
+          <h3>Siri</h3>
+          <p>An enthusiast of machine learning and IoT in environmental applications.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-photo">
+            <img src="teammate-2.jpg" alt="Photo of teammate two">
+          </div>
+          <h3>Jiayi</h3>
+          <p>An avid 3d-printer who partakes in STEM.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+      
   <section id="faq">
     <div class="wrap">
       <div class="section-head">
