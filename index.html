@@ -445,16 +445,22 @@
         <div class="stat"><b>4 wk</b><span>Build timeline</span></div>
       </div>
     </div>
+    <div class="hero-image">
+           <img src="plant-farm.jpeg" alt="LoopFarm planter setup with sensors, LED grow light, and irrigation system">
+        </div>
+      </div>
+    </div>
+    
   </header>
 
   <section id="dashboard">
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2>Live from the bed</h2>
-          <p class="lede-small">Pulled directly from our ThingSpeak channel. Irrigation and light run their own predictive logic on the ESP32; everything below is a live readout, not a simulation.</p>
+          <h2>Live From the Farm</h2>
+          <p class="lede-small">Below are our dashboard readings from our ThingSpeak channel, for field measurements on sensors. This is in accompaniment with our predictive digital twins (irrigation, light, and camera systems). Since this project uses digital twins, everything below is a live readout, not a simulation.</p>
         </div>
-        <span class="section-tag">Channel 3434570</span>
+        <span class="section-tag">ThingSpeak Channel: 3434570</span>
       </div>
 
       <div class="dash-grid">
@@ -473,17 +479,8 @@
         <div class="dash-card">
           <div class="label"><span>Disease Detector</span><span class="mono">Field 4</span></div>
           <iframe src="https://thingspeak.com/channels/3434570/charts/4?bgcolor=%23FBF8EF&color=%234B6B3A&dynamic=true&results=60&type=line"></iframe>
-        </div>
-        <div class="dash-card">
-          <div class="label"><span>Soil Temperature</span><span class="mono">Field 5</span></div>
-          <iframe src="https://thingspeak.com/channels/3434570/charts/5?bgcolor=%23FBF8EF&color=%236B4226&dynamic=true&results=60&type=line"></iframe>
-        </div>
-        <div class="dash-card">
-          <div class="label"><span>Air Temperature</span><span class="mono">Field 6</span></div>
-          <iframe src="https://thingspeak.com/channels/3434570/charts/6?bgcolor=%23FBF8EF&color=%2346626B&dynamic=true&results=60&type=line"></iframe>
-        </div>
       </div>
-      <p class="dash-note">// Disease Detector reads 0 = healthy, 1 = disease flagged, 2 = uncertain. An email alert fires automatically on a "1" via ThingSpeak React.</p>
+      <p class="dash-note"> Disease Detector reads 0 = healthy, 1 = disease flagged, 2 = uncertain. </p>
     </div>
   </section>
 
@@ -522,18 +519,16 @@
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2>The two models doing the thinking</h2>
-          <p class="lede-small">One predicts ahead of a sensor reading. The other reacts smoothly to one. Neither pretends to be the other.</p>
+          <h2>ODE Models</h2>
+          <p class="lede-small">Two predictive models used for irrigation and lighting systems</p>
         </div>
       </div>
 
       <div class="model-grid">
         <div class="model-card">
-          <span class="order-tag">Irrigation — second order, predictive</span>
           <h3>Soil moisture decay</h3>
           <div class="eq">M(t) = M<sub>∞</sub> + C₁e<sup>-t/τ₁</sup> + C₂e<sup>-t/τ₂</sup></div>
-          <p>Fit against a logged drying curve rather than assumed. The controller forecasts moisture five minutes out and waters ahead of the threshold, falling back to the live sensor whenever its own forecast drifts more than 15 points from reality.</p>
-          <span class="fit-stat">R² = 0.9709</span>
+          <p>The controller forecasts moisture five minutes out and waters ahead of the threshold, falling back to the live sensor whenever its own forecast drifts more than 15 points from current sensor readings.</p>
           <div class="img-slot" style="aspect-ratio:16/9; margin-top:12px;">
             <img src="moisture_decay_fit.png"
      alt="Soil moisture decay fit"
@@ -542,11 +537,9 @@
         </div>
 
         <div class="model-card">
-          <span class="order-tag">Grow light — first order, reactive</span>
           <h3>LED brightness response</h3>
           <div class="eq">B(t) = B<sub>t</sub> − (B<sub>t</sub> − B₀)e<sup>-t/τ</sup></div>
           <p>No overshoot by design: brightness eases toward whatever the ambient sensor calls for. A lightweight self-check compares the closed-form prediction against actual output and only steps in with simple proportional correction when the two disagree.</p>
-          <span class="fit-stat">τ chosen ≥ 10× sensor response time</span>
           <div class="img-slot" style="aspect-ratio:16/9; margin-top:12px;">
             <img src="led_first_order_plot.png"
        alt="LED first order response plot"
@@ -570,7 +563,7 @@
     <div class="img-slot">
       <img src="breadboard.jpg" alt="Sensor + relay layout" style="width:100%; height:100%; object-fit:cover;">
     </div>
-    <figcaption>Sensor + relay layout</figcaption>
+    <figcaption>Image of Smart Farm</figcaption>
   </figure>
 
   <figure>
@@ -598,7 +591,6 @@
   </div>
 </figure>
 </figure>
-  <figcaption>Your Caption Here</figcaption>
 </figure>
     </div>
   </section>
